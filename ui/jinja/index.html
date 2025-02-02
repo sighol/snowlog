@@ -1,0 +1,26 @@
+{% extends "layout.html" %} {% block title %}Log{% endblock title %} {% block
+main %}
+<div class="page-weeks">
+  <div class="header">
+    {{home_header_link()}}
+    <h1>Log</h1>
+  </div>
+  <a href="/new">Add new</a>
+
+  {% for activity in activities %}
+  <div class="activity">
+    <a name="{{activity.id}}"></a>
+    <h2>{{activity.activity_type}} - {{activity.date}}</h2>
+    <div class="summary">
+      {% if activity.duration_hours %}
+      <strong>Duration:&nbsp;</strong>{{activity.duration_hours|floatfmt}}<br />
+      {% endif %}
+      {% if activity.score %}
+      <strong>Score:&nbsp;</strong>{{activity.score|floatfmt}}<br />
+      {% endif %}
+    </div>
+    <p>{{activity.description}}</p>
+  </div>
+  {% endfor %}
+</div>
+{% endblock main %}

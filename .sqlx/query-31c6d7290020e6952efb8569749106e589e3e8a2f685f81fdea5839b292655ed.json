@@ -1,0 +1,26 @@
+{
+  "db_name": "SQLite",
+  "query": "select id, type as type_ from snowboard_activity_types",
+  "describe": {
+    "columns": [
+      {
+        "name": "id",
+        "ordinal": 0,
+        "type_info": "Integer"
+      },
+      {
+        "name": "type_",
+        "ordinal": 1,
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Right": 0
+    },
+    "nullable": [
+      false,
+      false
+    ]
+  },
+  "hash": "31c6d7290020e6952efb8569749106e589e3e8a2f685f81fdea5839b292655ed"
+}

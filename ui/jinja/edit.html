@@ -1,0 +1,76 @@
+{% extends "layout.html" %} {% block title %}Time tracking by sighol{% endblock
+title %} {% block main %}
+<div class="page-weeks">
+  <div class="header">
+    {{home_header_link()}}
+    <h1>Yes</h1>
+  </div>
+
+  <div class="page-edit">
+    <form class="edit-form" action="/edit" method="POST">
+      {% if activity.id %}
+      <input type="hidden" name="id" value="{{activity.id}}" />
+      {% endif %}
+
+      <label for="date">Date</label>
+      <input
+        type="date"
+        name="date"
+        value="{{activity.date}}"
+        required
+      />
+
+      <label for="date">Duration in hours</label>
+      <input
+        type="duration_hours"
+        name="duration_hours"
+        value="{% if activity.duration_hours %}{{activity.duration_hours}}{% endif %}"
+        required
+      />
+
+      <label for="activity_type">Type</label>
+      <select name="activity_type">
+        {% for type in activity_types %}
+        <option value="{{type.type_}}">{{type.type_}}</option>
+        {% endfor %}
+      </select>
+
+      <label for="description">description</label>
+      <textarea name="description" rows="8">
+{%if activity %}{{activity.description|orempty}}{%endif %}</textarea
+      >
+      <button type="submit">Save</button>
+    </form>
+    {%if activity%}
+    <div class="delete-form">
+      <button class="delete-button" onclick="confirmDelete()">delete</button>
+    </div>
+    {%endif%}
+  </div>
+</div>
+
+<script>
+  document.body.addEventListener("keydown", (event) => {
+    if (event.key == "Enter" && (event.metaKey || event.ctrlKey)) {
+      console.log("ctrl + enter");
+      event.target.form?.submit();
+    }
+  });
+</script>
+
+{% if activity %}
+<form
+  name="deleteactivityForm"
+  action="/activity/{{activity.id}}/delete"
+  method="POST"
+></form>
+
+<script>
+  async function confirmDelete() {
+    let confirmed = confirm("Are you sure?");
+    if (confirmed) {
+      document.deleteactivityForm.submit();
+    }
+  }
+</script>
+{% endif %} {% endblock%}

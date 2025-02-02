@@ -1,0 +1,17 @@
+services:
+  snowlog:
+    restart: always
+    build: .
+    environment:
+      DATABASE_URL: sqlite:///log/db/db.sqlite
+    # restart: always
+    volumes:
+      - ./ui:/log/ui
+      - ./db:/log/db
+    networks:
+      - caddy
+
+networks:
+  caddy:
+    name: caddy
+    external: true

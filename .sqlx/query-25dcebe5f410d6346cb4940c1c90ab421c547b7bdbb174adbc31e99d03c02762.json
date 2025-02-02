@@ -1,0 +1,50 @@
+{
+  "db_name": "SQLite",
+  "query": "select \n            sa.id,\n            sa.date_epoch_seconds,\n            sa.duration_hours,\n            sat.type as activity_type,\n            sa.description,\n            sa.score\n            from snowboard_activities as sa\n            join snowboard_activity_types as sat on sat.id = sa.type\n            where date_epoch_seconds >= ?\n            order by date_epoch_seconds asc",
+  "describe": {
+    "columns": [
+      {
+        "name": "id",
+        "ordinal": 0,
+        "type_info": "Integer"
+      },
+      {
+        "name": "date_epoch_seconds",
+        "ordinal": 1,
+        "type_info": "Integer"
+      },
+      {
+        "name": "duration_hours",
+        "ordinal": 2,
+        "type_info": "Float"
+      },
+      {
+        "name": "activity_type",
+        "ordinal": 3,
+        "type_info": "Text"
+      },
+      {
+        "name": "description",
+        "ordinal": 4,
+        "type_info": "Text"
+      },
+      {
+        "name": "score",
+        "ordinal": 5,
+        "type_info": "Float"
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false,
+      false,
+      true,
+      false,
+      false,
+      true
+    ]
+  },
+  "hash": "25dcebe5f410d6346cb4940c1c90ab421c547b7bdbb174adbc31e99d03c02762"
+}

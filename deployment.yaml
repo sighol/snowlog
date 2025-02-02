@@ -1,0 +1,9 @@
+additionalFiles:
+- ui
+name: snowlog
+registry: 10.0.0.6:5000
+server: home-server
+build: |
+  DATABASE_URL=sqlite://db.sqlite cargo sqlx prepare
+  cargo fmt --check
+  cargo test
