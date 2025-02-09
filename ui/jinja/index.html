@@ -8,13 +8,18 @@
     {{home_header_link()}}
     <h1>Snow log!</h1>
   </div>
-  <a href="/edit">
-    <img src="/static/pen.png" height="20" />
-    Add new
-  </a>
-  <p>
-    <Strong>Total days:</Strong>{{summary.days}}
-  </p>
+
+  <div class="season-summary">
+    <div>
+      <Strong>Total days:</Strong> {{summary.days}}
+    </div>
+    <div>
+      <a href="/edit" class="add-new">
+        <img src="/static/pen.png" height="20" />
+        Add new
+      </a>
+    </div>
+  </div>
 
   {% for activity in activities %}
   <div class="activity">
@@ -38,10 +43,12 @@
         {{activity.description|markdown}}
       </div>
     {% endif %}
-    <a href="/edit?id={{activity.id}}">
-      <img src="/static/pen.png" height="20" />
-      Edit
-    </a>
+    <div class="edit-button">
+      <a href="/edit?id={{activity.id}}">
+        <img src="/static/pen.png" height="20" />
+        Edit
+      </a>
+    </div>
   </div>
   {% endfor %}
 </div>

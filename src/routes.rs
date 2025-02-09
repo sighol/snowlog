@@ -1,7 +1,7 @@
 use axum::extract::{Query, State};
 use axum::response::{Html, Redirect};
 use axum::Form;
-use chrono::{Datelike, Days, NaiveDate, NaiveDateTime, NaiveTime, SubsecRound, Utc};
+use chrono::{Datelike, Months, NaiveDate, NaiveDateTime, NaiveTime, SubsecRound, Utc};
 use chrono_tz::Europe::Oslo;
 use minijinja::context;
 
@@ -24,7 +24,7 @@ pub async fn get_index(State(state): State<AppState>) -> Html<String> {
             NaiveTime::from_hms_opt(0, 0, 0).unwrap(),
         )
     };
-    let ended = started.checked_add_days(Days::new(365)).unwrap();
+    let ended = started.checked_add_months(Months::new(12)).unwrap();
     tracing::info!("Started: {:?}, ended: {:?}", started, ended);
     let activities = get_activities_from(&state.pool, started).await.unwrap();
     let summary = get_summary(&state.pool, started, ended).await.unwrap();

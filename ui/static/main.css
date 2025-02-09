@@ -63,6 +63,17 @@ body {
   align-self: end;
 }
 
+.season-summary {
+  margin: 2em 2em 0 2em;
+  padding: 0 1em;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.season-summary div:nth-child(2) {
+  justify-self: end;
+}
+
 a {
   color: var(--color);
   text-decoration: none;
@@ -92,6 +103,10 @@ a {
 
 .activity .description p {
   margin: 0.5em 0;
+}
+
+.activity .edit-button {
+  text-align: right;
 }
 
 
