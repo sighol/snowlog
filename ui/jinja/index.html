@@ -16,12 +16,10 @@
     <div>
       <Strong>Total hours:</Strong> {{summary.hours|floatfmt}}
     </div>
-    <div>
-      <a href="/edit" class="add-new">
-        <img src="/static/pen.png" height="20" />
-        Add new
-      </a>
-    </div>
+    <a href="/edit" class="add-new">
+      <img src="/static/pen.png" height="20" />
+      Add new
+    </a>
   </div>
 
   {% for activity in activities %}
