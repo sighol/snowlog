@@ -72,11 +72,14 @@ pub async fn get_add(
 }
 
 pub async fn post_edit(State(state): State<AppState>, Form(activity): Form<Activity>) -> Redirect {
-    dbg!(&activity);
     match activity.id {
-        None => insert_activity(&state.pool, activity).await.unwrap(),
-        Some(_) => update_activity(&state.pool, activity).await.unwrap(),
+        None => {
+            insert_activity(&state.pool, activity).await.unwrap();
+            Redirect::to("/")
+        },
+        Some(id) => {
+            update_activity(&state.pool, activity).await.unwrap();
+            Redirect::to(&format!("/#{}", id))
+        },
     }
-
-    Redirect::to("/")
 }

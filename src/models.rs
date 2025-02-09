@@ -72,7 +72,7 @@ pub async fn get_activities_from(
             from snowboard_activities as sa
             join snowboard_activity_types as sat on sat.id = sa.type
             where date >= ?
-            order by date asc",
+            order by date desc",
         timestamp,
     )
     .fetch_all(con)
