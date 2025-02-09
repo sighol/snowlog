@@ -68,7 +68,7 @@ fn markdown(value: String) -> Value {
 fn hourminutes(value: Option<String>) -> Result<Value, Error> {
     match value {
         Some(x) => {
-            return if let Ok(ndt) = NaiveTime::parse_from_str(&x, "%H:%M:%S") {
+            if let Ok(ndt) = NaiveTime::parse_from_str(&x, "%H:%M:%S") {
                 Ok(Value::from(ndt.format("%H:%M").to_string()))
             } else if let Ok(ndt) = NaiveDateTime::parse_from_str(&x, "%Y-%m-%dT%H:%M:%S") {
                 Ok(Value::from(ndt.format("%H:%M").to_string()))

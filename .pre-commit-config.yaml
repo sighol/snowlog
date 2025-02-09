@@ -1,0 +1,35 @@
+repos:
+  - repo: local
+    hooks:
+      - id: fmt
+        name: cargo fmt
+        entry: cargo fmt
+        args: ["--"]
+        types: [rust]
+        language: system
+        pass_filenames: false
+        always_run: true
+      - id: check
+        name: cargo check
+        entry: cargo check --all-targets
+        args: ["--"]
+        types: [rust]
+        language: system
+        pass_filenames: false
+        always_run: true
+      - id: test
+        name: cargo test
+        entry: cargo test
+        args: ["--"]
+        types: [rust]
+        language: system
+        pass_filenames: false
+        always_run: true
+      - id: clippy
+        name: cargo clippy
+        entry: cargo clippy
+        args: ["--", "-D", "warnings"]
+        types: [rust]
+        language: system
+        pass_filenames: false
+        always_run: true

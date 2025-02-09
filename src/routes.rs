@@ -76,10 +76,10 @@ pub async fn post_edit(State(state): State<AppState>, Form(activity): Form<Activ
         None => {
             insert_activity(&state.pool, activity).await.unwrap();
             Redirect::to("/")
-        },
+        }
         Some(id) => {
             update_activity(&state.pool, activity).await.unwrap();
             Redirect::to(&format!("/#{}", id))
-        },
+        }
     }
 }
