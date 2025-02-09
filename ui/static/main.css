@@ -68,14 +68,10 @@ body {
 }
 
 .season-summary {
-  margin: 2em 2em 0 2em;
+  margin-top: 2em;
   padding: 0 1em;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-}
-
-.season-summary div:nth-child(2) {
-  justify-self: end;
+  display: flex;
+  justify-content: space-between;
 }
 
 .season-summary a {
@@ -97,14 +93,21 @@ a {
   background-color: var(--background);
   color: var(--color);
   border-radius: 0.3rem;
-  margin: 2em;
-  padding: 1em;
+  margin: 1em;
+  padding: .5em;
   text-align: left;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
 .activity > h2 {
   text-align: center;
+  margin-top: 0;
+}
+
+.activity .summary {
+  display: flex;
+  justify-content: space-between;
+  margin: 10px;
 }
 
 .activity .description  {

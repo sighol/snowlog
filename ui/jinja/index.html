@@ -14,6 +14,9 @@
       <Strong>Total days:</Strong> {{summary.days}}
     </div>
     <div>
+      <Strong>Total hours:</Strong> {{summary.hours|floatfmt}}
+    </div>
+    <div>
       <a href="/edit" class="add-new">
         <img src="/static/pen.png" height="20" />
         Add new
@@ -27,17 +30,24 @@
     <h2>{{activity.date|dateformat}} / {{activity.activity_type}}</h2>
     <div class="summary">
       {% if activity.duration_hours %}
-      <strong>Duration:&nbsp;</strong>{{activity.duration_hours|floatfmt}}<br />
+        <div>
+          <strong>Duration:&nbsp;</strong>{{activity.duration_hours|floatfmt}} hours
+        </div>
       {% endif %}
 
       {% if activity.location %}
-        <strong>Location:&nbsp;</strong>{{activity.location}}<br />
+        <div>
+          <strong>Location:&nbsp;</strong>{{activity.location}}
+        </div>
       {% endif %}
 
       {% if activity.score %}
-      <strong>Score:&nbsp;</strong>{{activity.score|floatfmt}}<br />
+        <div>
+          <strong>Score:&nbsp;</strong>{{activity.score|floatfmt}}
+        </div>
       {% endif %}
     </div>
+
     {% if activity.description %}
       <div class="description">
         {{activity.description|markdown}}

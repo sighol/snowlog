@@ -182,6 +182,7 @@ pub async fn update_activity(con: &SqlitePool, activity: Activity) -> anyhow::Re
 #[derive(Debug, Serialize, FromRow)]
 pub struct Summary {
     pub days: i64,
+    pub hours: f64,
 }
 
 pub async fn get_summary(
@@ -193,7 +194,8 @@ pub async fn get_summary(
         Summary,
         r"
             select 
-                count(*) as days
+                count(*) as days,
+                coalesce(sum(duration_hours), 0.0) as hours
             from snowboard_activities
             where date >= ? and date < ?
         ",
