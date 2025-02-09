@@ -1,24 +1,38 @@
 use axum::extract::{Query, State};
 use axum::response::{Html, Redirect};
 use axum::Form;
-use chrono::{Datelike, NaiveDate, NaiveDateTime, NaiveTime, SubsecRound, Utc};
+use chrono::{Datelike, Days, NaiveDate, NaiveDateTime, NaiveTime, SubsecRound, Utc};
 use chrono_tz::Europe::Oslo;
 use minijinja::context;
 
 use crate::models::{
-    get_activities_from, get_activity, get_all_types, insert_activity, update_activity, Activity,
+    get_activities_from, get_activity, get_all_types, get_summary, insert_activity,
+    update_activity, Activity,
 };
 use crate::AppState;
 
 pub async fn get_index(State(state): State<AppState>) -> Html<String> {
-    let year = Utc::now().year();
-    let started = NaiveDateTime::new(
-        NaiveDate::from_ymd_opt(year, 1, 1).unwrap(),
-        NaiveTime::from_hms_opt(0, 0, 0).unwrap(),
-    );
+    let now = Utc::now();
+    let started = if now.month() >= 10 {
+        NaiveDateTime::new(
+            NaiveDate::from_ymd_opt(now.year(), 10, 1).unwrap(),
+            NaiveTime::from_hms_opt(0, 0, 0).unwrap(),
+        )
+    } else {
+        NaiveDateTime::new(
+            NaiveDate::from_ymd_opt(now.year() - 1, 10, 1).unwrap(),
+            NaiveTime::from_hms_opt(0, 0, 0).unwrap(),
+        )
+    };
+    let ended = started.checked_add_days(Days::new(365)).unwrap();
+    tracing::info!("Started: {:?}, ended: {:?}", started, ended);
     let activities = get_activities_from(&state.pool, started).await.unwrap();
+    let summary = get_summary(&state.pool, started, ended).await.unwrap();
 
-    state.render("index.html", context!(activities => activities))
+    state.render(
+        "index.html",
+        context!(activities => activities, summary => summary,),
+    )
 }
 
 #[derive(serde::Deserialize, serde::Serialize)]

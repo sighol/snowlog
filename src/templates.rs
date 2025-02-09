@@ -55,7 +55,7 @@ fn orempty(value: Option<String>) -> Value {
 
 fn dateformat(value: String) -> String {
     let datetime = NaiveDateTime::from_str(&value).unwrap();
-    datetime.format("%d. %B %Y").to_string()
+    datetime.format("%B %d, %Y").to_string()
 }
 
 fn markdown(value: String) -> Value {

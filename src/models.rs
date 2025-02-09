@@ -179,6 +179,33 @@ pub async fn update_activity(con: &SqlitePool, activity: Activity) -> anyhow::Re
     Ok(())
 }
 
+#[derive(Debug, Serialize, FromRow)]
+pub struct Summary {
+    pub days: i64,
+}
+
+pub async fn get_summary(
+    con: &SqlitePool,
+    from: NaiveDateTime,
+    to: NaiveDateTime,
+) -> anyhow::Result<Summary> {
+    let response = sqlx::query_as!(
+        Summary,
+        r"
+            select 
+                count(*) as days
+            from snowboard_activities
+            where date >= ? and date < ?
+        ",
+        from,
+        to,
+    )
+    .fetch_one(con)
+    .await?;
+
+    Ok(response)
+}
+
 #[cfg(test)]
 mod tests {
     use std::str::FromStr;
@@ -282,5 +309,10 @@ mod tests {
         assert_eq!("Tryvann", activity.location.unwrap().as_str());
         assert_eq!(Some(1.0), activity.score);
         assert_eq!("This was OK".to_owned(), activity.description);
+
+        let start = NaiveDateTime::from_str("2025-01-01T00:00:00").unwrap();
+        let stopped = NaiveDateTime::from_str("2026-01-01T00:00:00").unwrap();
+        let summary = get_summary(&pool, start, stopped).await.unwrap();
+        assert_eq!(1, summary.days);
     }
 }
