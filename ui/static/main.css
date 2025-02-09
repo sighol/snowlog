@@ -6,6 +6,8 @@
   --alternating-row: #1b2830;
   --record-hover: #1b2830;
   --link-color: #7CB7DF;
+  --border-color: #111;
+  --button-padding: 0.1em 0.3em;
   font-size: 20px;
 }
 
@@ -74,6 +76,15 @@ body {
   justify-self: end;
 }
 
+.season-summary a {
+  padding: var(--button-padding);
+  border-radius: 5px;
+}
+
+.season-summary a:hover {
+  background-color: var(--week-header);
+}
+
 a {
   color: var(--color);
   text-decoration: none;
@@ -94,11 +105,11 @@ a {
 }
 
 .activity .description  {
-  background-color: #333;
+  background-color: var(--mid-color);
   border-radius: 5px;
   margin: 10px;
   padding: 10px;
-  border: 1px solid #111;
+  border: 1px solid var(--border-color);
 }
 
 .activity .description p {
@@ -106,7 +117,17 @@ a {
 }
 
 .activity .edit-button {
-  text-align: right;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.activity .edit-button a {
+  padding: 0.1em 0.3em;
+  border-radius: 5px;
+}
+
+.activity .edit-button a:hover {
+  background-color: var(--week-header);
 }
 
 
