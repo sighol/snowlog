@@ -150,10 +150,12 @@ a {
 /*  FORMS */
 
 form input,
+form select,
 form textarea
  {
   padding: 0.5em 1em;
-  background-color: #eee;
+  color: var(--color);
+  background-color: var(--background);
   border-radius: var(--border-radius);
   border: 2px solid #111;
 }
@@ -205,6 +207,7 @@ button.delete-button:hover {
 }
 
 .page-edit form input,
+.page-edit form select,
 .page-edit form textarea {
   grid-column: 2 / 3;
 }
