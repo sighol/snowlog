@@ -1,5 +1,6 @@
 use std::borrow::Cow;
 use std::fs;
+use std::str::FromStr;
 
 use axum::response::Html;
 use chrono::{NaiveDateTime, NaiveTime};
@@ -50,6 +51,11 @@ fn orempty(value: Option<String>) -> Value {
         Some(x) => x.into(),
         None => "".into(),
     }
+}
+
+fn dateformat(value: String) -> String {
+    let datetime = NaiveDateTime::from_str(&value).unwrap();
+    datetime.format("%d. %B %Y").to_string()
 }
 
 fn markdown(value: String) -> Value {
@@ -115,6 +121,7 @@ fn create_environment<'source>() -> Result<Environment<'source>> {
     let uuid = &uuid::Uuid::new_v4().to_string()[..8];
     environment.add_global("buildNumber", uuid);
     environment.add_filter("coloredfloat", coloredfloat);
+    environment.add_filter("dateformat", dateformat);
     environment.add_filter("coloredfloatnegative", coloredfloatnegative);
     environment.add_filter("hourminutes", hourminutes);
     environment.add_filter("orempty", orempty);

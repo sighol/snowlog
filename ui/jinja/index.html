@@ -16,7 +16,7 @@
   {% for activity in activities %}
   <div class="activity">
     <a name="{{activity.id}}"></a>
-    <h2>{{activity.activity_type}} - {{activity.date}}</h2>
+    <h2>{{activity.date|dateformat}} / {{activity.activity_type}}</h2>
     <div class="summary">
       {% if activity.duration_hours %}
       <strong>Duration:&nbsp;</strong>{{activity.duration_hours|floatfmt}}<br />
