@@ -1,6 +1,6 @@
 {
   "db_name": "SQLite",
-  "query": "select \n            sa.id,\n            sa.date,\n            sa.location,\n            sa.duration_hours,\n            sat.type as activity_type,\n            sa.description,\n            sa.score\n            from snowboard_activities as sa\n            join snowboard_activity_types as sat on sat.id = sa.type\n            where date >= ?\n            order by date desc",
+  "query": "select \n            sa.id,\n            sa.date,\n            coalesce(sa.location, '') as location,\n            sa.duration_hours,\n            sat.type as activity_type,\n            sa.description,\n            sa.score\n            from snowboard_activities as sa\n            join snowboard_activity_types as sat on sat.id = sa.type\n            where date >= ?\n            order by date desc",
   "describe": {
     "columns": [
       {
@@ -45,12 +45,12 @@
     "nullable": [
       false,
       false,
-      true,
+      false,
       true,
       false,
       false,
       true
     ]
   },
-  "hash": "70928b8c8c04f24f298e3243405aea0f5d17d948e73f115c5bf3d4c52ae036d1"
+  "hash": "67830cde54fbcafec534cf71aa055a03bbaa69c2bc3b6ad52e212cdec151610d"
 }

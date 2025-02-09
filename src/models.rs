@@ -8,7 +8,7 @@ use sqlx::{FromRow, SqlitePool};
 pub struct ActivityRow {
     pub id: i64,
     pub date: String,
-    pub location: Option<String>,
+    pub location: String,
     pub duration_hours: Option<f64>,
     pub activity_type: String,
     pub score: Option<f64>,
@@ -19,7 +19,7 @@ pub struct ActivityRow {
 pub struct Activity {
     pub id: Option<i64>,
     pub date: NaiveDateTime,
-    pub location: Option<String>,
+    pub location: String,
     pub duration_hours: Option<f64>,
     pub activity_type: String,
     pub score: Option<f64>,
@@ -64,7 +64,7 @@ pub async fn get_activities_from(
         "select 
             sa.id,
             sa.date,
-            sa.location,
+            coalesce(sa.location, '') as location,
             sa.duration_hours,
             sat.type as activity_type,
             sa.description,
@@ -87,7 +87,7 @@ pub async fn get_activity(con: &SqlitePool, id: i64) -> anyhow::Result<Option<Ac
         "select 
             sa.id,
             sa.date,
-            sa.location,
+            coalesce(sa.location, '') as location,
             sa.duration_hours,
             sat.type as activity_type,
             sa.description,
@@ -244,7 +244,7 @@ mod tests {
             Activity {
                 id: None,
                 date: NaiveDateTime::from_str("2025-01-01T00:00:00").unwrap(),
-                location: Some("Norefjell".to_owned()),
+                location: "Norefjell".to_owned(),
                 duration_hours: Some(3.14),
                 activity_type: "Skis".into(),
                 score: Some(0.8),
@@ -270,7 +270,7 @@ mod tests {
         );
         assert_eq!(Some(3.14), activity.duration_hours);
         assert_eq!("Skis".to_owned(), activity.activity_type);
-        assert_eq!(Some("Norefjell".to_owned()), activity.location);
+        assert_eq!("Norefjell".to_owned(), activity.location);
         assert_eq!(Some(0.8), activity.score);
         assert_eq!("This was fun".to_owned(), activity.description);
 
@@ -279,7 +279,7 @@ mod tests {
             Activity {
                 id: Some(activity.id.unwrap()),
                 date: NaiveDateTime::from_str("2025-02-03T04:05:06").unwrap(),
-                location: Some("Tryvann".to_owned()),
+                location: "Tryvann".to_owned(),
                 duration_hours: Some(56.55),
                 activity_type: "Snowboarding".to_owned(),
                 score: Some(1.0),
@@ -308,7 +308,7 @@ mod tests {
         );
         assert_eq!(Some(56.55), activity.duration_hours);
         assert_eq!("Snowboarding".to_owned(), activity.activity_type);
-        assert_eq!("Tryvann", activity.location.unwrap().as_str());
+        assert_eq!("Tryvann", activity.location.as_str());
         assert_eq!(Some(1.0), activity.score);
         assert_eq!("This was OK".to_owned(), activity.description);
 
