@@ -91,6 +91,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .route("/", get(routes::get_index))
         .route("/edit", get(routes::get_add))
         .route("/edit", post(routes::post_edit))
+        .route("/activity/:id/delete", post(routes::post_delete))
         .nest_service("/static", ServeDir::new("ui/static"))
         .layer(middleware::from_fn(logging_layer))
         .with_state(AppState { pool, environment });

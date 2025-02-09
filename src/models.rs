@@ -179,6 +179,14 @@ pub async fn update_activity(con: &SqlitePool, activity: Activity) -> anyhow::Re
     Ok(())
 }
 
+pub async fn delete_activity(con: &SqlitePool, id: i64) -> anyhow::Result<()> {
+    sqlx::query!("delete from snowboard_activities where id = ?", id)
+        .execute(con)
+        .await?;
+
+    Ok(())
+}
+
 #[derive(Debug, Serialize, FromRow)]
 pub struct Summary {
     pub days: i64,

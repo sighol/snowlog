@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "delete from snowboard_activities where id = ?",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": []
+  },
+  "hash": "59b8eecff866d326c1c8ba2853a2fecdc2c94ad8ff081669e9e41d2ab3411d3c"
+}

@@ -1,4 +1,4 @@
-use axum::extract::{Query, State};
+use axum::extract::{Path, Query, State};
 use axum::response::{Html, Redirect};
 use axum::Form;
 use chrono::{Datelike, Months, NaiveDate, NaiveDateTime, NaiveTime, SubsecRound, Utc};
@@ -6,8 +6,8 @@ use chrono_tz::Europe::Oslo;
 use minijinja::context;
 
 use crate::models::{
-    get_activities_from, get_activity, get_all_types, get_summary, insert_activity,
-    update_activity, Activity,
+    delete_activity, get_activities_from, get_activity, get_all_types, get_summary,
+    insert_activity, update_activity, Activity,
 };
 use crate::AppState;
 
@@ -82,4 +82,10 @@ pub async fn post_edit(State(state): State<AppState>, Form(activity): Form<Activ
             Redirect::to(&format!("/#{}", id))
         }
     }
+}
+
+pub async fn post_delete(State(state): State<AppState>, Path(id): Path<i64>) -> Redirect {
+    delete_activity(&state.pool, id).await.unwrap();
+
+    Redirect::to("/")
 }
