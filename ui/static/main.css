@@ -74,6 +74,10 @@ body {
   justify-content: space-between;
 }
 
+.season-summary > * {
+  align-content: center;
+}
+
 .season-summary a {
   padding: var(--button-padding);
   border-radius: var(--border-radius);
