@@ -89,7 +89,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let app = Router::new()
         .route("/", get(routes::get_index))
-        .route("/new", get(routes::get_add))
+        .route("/edit", get(routes::get_add))
         .route("/edit", post(routes::post_edit))
         .nest_service("/static", ServeDir::new("ui/static"))
         .layer(middleware::from_fn(logging_layer))

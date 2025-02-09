@@ -1,5 +1,5 @@
-use anyhow::{self, bail, Context};
-use chrono::{NaiveDate, TimeZone};
+use anyhow::{self, bail};
+use chrono::NaiveDateTime;
 use chrono_tz::Europe::Oslo;
 use serde::{Deserialize, Serialize};
 use sqlx::{FromRow, SqlitePool};
@@ -7,7 +7,7 @@ use sqlx::{FromRow, SqlitePool};
 #[derive(Debug, Serialize, FromRow)]
 pub struct ActivityRow {
     pub id: i64,
-    pub date_epoch_seconds: i64,
+    pub date: String,
     pub duration_hours: Option<f64>,
     pub activity_type: String,
     pub score: Option<f64>,
@@ -17,30 +17,17 @@ pub struct ActivityRow {
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Activity {
     pub id: Option<i64>,
-    pub date: NaiveDate,
+    pub date: NaiveDateTime,
     pub duration_hours: Option<f64>,
     pub activity_type: String,
     pub score: Option<f64>,
     pub description: String,
 }
 
-pub fn to_epoch_seconds(date: &NaiveDate) -> anyhow::Result<i64> {
-    Ok(date
-        .and_hms_opt(0, 0, 0)
-        .unwrap()
-        .and_local_timezone(Oslo)
-        .earliest()
-        .context("Time is not valid")?
-        .timestamp())
-}
-
 impl From<ActivityRow> for Activity {
     fn from(value: ActivityRow) -> Self {
-        let date = Oslo
-            .timestamp_opt(value.date_epoch_seconds, 0)
-            .unwrap()
-            .naive_local()
-            .date();
+        let date = NaiveDateTime::parse_from_str(&value.date, "%Y-%m-%d %H:%M:%S")
+            .expect("Date time is not valid");
 
         Activity {
             id: Some(value.id),
@@ -61,11 +48,9 @@ pub struct ActivityType {
 
 pub async fn get_activities_from(
     con: &SqlitePool,
-    from: NaiveDate,
+    from: NaiveDateTime,
 ) -> anyhow::Result<Vec<Activity>> {
     let timestamp = from
-        .and_hms_opt(0, 0, 0)
-        .unwrap()
         .and_local_timezone(Oslo)
         .earliest()
         .unwrap()
@@ -75,21 +60,43 @@ pub async fn get_activities_from(
         ActivityRow,
         "select 
             sa.id,
-            sa.date_epoch_seconds,
+            sa.date,
             sa.duration_hours,
             sat.type as activity_type,
             sa.description,
             sa.score
             from snowboard_activities as sa
             join snowboard_activity_types as sat on sat.id = sa.type
-            where date_epoch_seconds >= ?
-            order by date_epoch_seconds asc",
+            where date >= ?
+            order by date asc",
         timestamp,
     )
     .fetch_all(con)
     .await?;
 
     Ok(response.into_iter().map(|x| x.into()).collect())
+}
+
+pub async fn get_activity(con: &SqlitePool, id: i64) -> anyhow::Result<Option<Activity>> {
+    let response = sqlx::query_as!(
+        ActivityRow,
+        "select 
+            sa.id,
+            sa.date,
+            sa.duration_hours,
+            sat.type as activity_type,
+            sa.description,
+            sa.score
+            from snowboard_activities as sa
+            join snowboard_activity_types as sat on sat.id = sa.type
+            where sa.id >= ?
+            order by date asc",
+        id,
+    )
+    .fetch_optional(con)
+    .await?;
+
+    Ok(response.map(|x| x.into()))
 }
 
 pub async fn get_all_types(con: &SqlitePool) -> anyhow::Result<Vec<ActivityType>> {
@@ -108,20 +115,19 @@ pub async fn insert_activity(con: &SqlitePool, activity: Activity) -> anyhow::Re
         bail!("Unknown activity type");
     };
     let type_id = type_.id;
-
-    let date = to_epoch_seconds(&activity.date)?;
+    assert!(activity.id.is_none());
 
     sqlx::query!(
         r"
             insert into snowboard_activities (
-                date_epoch_seconds,
+                date,
                 duration_hours,
                 type,
                 description,
                 score
             ) VALUES (?, ?, ?, ?, ?)
         ",
-        date,
+        activity.date,
         activity.duration_hours,
         type_id,
         activity.description,
@@ -133,8 +139,42 @@ pub async fn insert_activity(con: &SqlitePool, activity: Activity) -> anyhow::Re
     Ok(())
 }
 
+pub async fn update_activity(con: &SqlitePool, activity: Activity) -> anyhow::Result<()> {
+    let types = get_all_types(con).await?;
+    let Some(type_) = types.iter().find(|x| x.type_ == activity.activity_type) else {
+        bail!("Unknown activity type");
+    };
+    let type_id = type_.id;
+
+    let id = activity.id.unwrap();
+
+    sqlx::query!(
+        r"
+            update snowboard_activities 
+                set date = ?,
+                    duration_hours = ?,
+                    type = ?,
+                    description = ?,
+                    score = ?
+                where id = ?
+        ",
+        activity.date,
+        activity.duration_hours,
+        type_id,
+        activity.description,
+        activity.score,
+        id,
+    )
+    .execute(con)
+    .await?;
+
+    Ok(())
+}
+
 #[cfg(test)]
 mod tests {
+    use std::str::FromStr;
+
     use sqlx::sqlite::SqlitePoolOptions;
 
     use super::*;
@@ -154,16 +194,19 @@ mod tests {
     #[tokio::test]
     async fn insert_and_retrieve() {
         let pool = setup().await;
-        let activities = get_activities_from(&pool, NaiveDate::from_ymd_opt(2025, 1, 1).unwrap())
-            .await
-            .unwrap();
+        let activities = get_activities_from(
+            &pool,
+            NaiveDateTime::from_str("2025-01-01T00:00:00").unwrap(),
+        )
+        .await
+        .unwrap();
         assert_eq!(0, activities.len());
 
         insert_activity(
             &pool,
             Activity {
                 id: None,
-                date: NaiveDate::from_ymd_opt(2025, 1, 1).unwrap(),
+                date: NaiveDateTime::from_str("2025-01-01T00:00:00").unwrap(),
                 duration_hours: Some(3.14),
                 activity_type: "Skis".into(),
                 score: Some(0.8),
@@ -173,17 +216,59 @@ mod tests {
         .await
         .unwrap();
 
-        let activities = get_activities_from(&pool, NaiveDate::from_ymd_opt(2025, 1, 1).unwrap())
-            .await
-            .unwrap();
+        let activities = get_activities_from(
+            &pool,
+            NaiveDateTime::from_str("2025-01-01T00:00:00").unwrap(),
+        )
+        .await
+        .unwrap();
         assert_eq!(1, activities.len());
 
         let activity = activities.into_iter().next().unwrap();
         assert_eq!(Some(1), activity.id);
-        assert_eq!(NaiveDate::from_ymd_opt(2025, 1, 1).unwrap(), activity.date);
+        assert_eq!(
+            NaiveDateTime::from_str("2025-01-01T00:00:00").unwrap(),
+            activity.date
+        );
         assert_eq!(Some(3.14), activity.duration_hours);
         assert_eq!("Skis".to_owned(), activity.activity_type);
         assert_eq!(Some(0.8), activity.score);
         assert_eq!("This was fun".to_owned(), activity.description);
+
+        update_activity(
+            &pool,
+            Activity {
+                id: Some(activity.id.unwrap()),
+                date: NaiveDateTime::from_str("2025-02-03T04:05:06").unwrap(),
+                duration_hours: Some(56.55),
+                activity_type: "Snowboarding".to_owned(),
+                score: Some(1.0),
+                description: "This was OK".into(),
+            },
+        )
+        .await
+        .unwrap();
+
+        let activities = get_activities_from(
+            &pool,
+            NaiveDateTime::from_str("2025-01-01T00:00:00").unwrap(),
+        )
+        .await
+        .unwrap();
+        assert_eq!(1, activities.len());
+
+        let activity = get_activity(&pool, activity.id.unwrap())
+            .await
+            .unwrap()
+            .unwrap();
+        assert_eq!(Some(1), activity.id);
+        assert_eq!(
+            NaiveDateTime::from_str("2025-02-03T04:05:06").unwrap(),
+            activity.date
+        );
+        assert_eq!(Some(56.55), activity.duration_hours);
+        assert_eq!("Snowboarding".to_owned(), activity.activity_type);
+        assert_eq!(Some(1.0), activity.score);
+        assert_eq!("This was OK".to_owned(), activity.description);
     }
 }

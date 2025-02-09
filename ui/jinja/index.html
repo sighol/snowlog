@@ -8,7 +8,10 @@
     {{home_header_link()}}
     <h1>Snow log!</h1>
   </div>
-  <a href="/new">Add new</a>
+  <a href="/edit">
+    <img src="/static/pen.png" height="20" />
+    Add new
+  </a>
 
   {% for activity in activities %}
   <div class="activity">
@@ -23,6 +26,10 @@
       {% endif %}
     </div>
     <p>{{activity.description}}</p>
+    <a href="/edit?id={{activity.id}}">
+      <img src="/static/pen.png" height="20" />
+      Edit
+    </a>
   </div>
   {% endfor %}
 </div>
