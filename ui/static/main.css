@@ -82,6 +82,17 @@ a {
   text-align: center;
 }
 
+.activity .description  {
+  background-color: #333;
+  border-radius: 5px;
+  margin: 10px;
+  padding: 10px;
+  border: 1px solid #111;
+}
+
+.activity .description p {
+  margin: 0.5em 0;
+}
 
 
 /*  FORMS */

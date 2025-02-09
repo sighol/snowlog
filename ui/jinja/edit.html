@@ -45,10 +45,18 @@
         {% endfor %}
       </select>
 
+      <label for="score">Score</label>
+      <input
+        name="score"
+        type="range"
+        min="0.0"
+        max="1.0"
+        step="0.05"
+        value="{{activity.score}}" />
+
       <label for="description">description</label>
       <textarea name="description" rows="8">
-{%if activity %}{{activity.description|orempty}}{%endif %}</textarea
-      >
+{%if activity %}{{activity.description|orempty}}{%endif %}</textarea>
       <button type="submit">Save</button>
     </form>
     {%if activity%}

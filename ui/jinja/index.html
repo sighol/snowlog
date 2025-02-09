@@ -26,12 +26,15 @@
         <strong>Location:&nbsp;</strong>{{activity.location}}<br />
       {% endif %}
 
-
       {% if activity.score %}
       <strong>Score:&nbsp;</strong>{{activity.score|floatfmt}}<br />
       {% endif %}
     </div>
-    {{activity.description|markdown}}
+    {% if activity.description %}
+      <div class="description">
+        {{activity.description|markdown}}
+      </div>
+    {% endif %}
     <a href="/edit?id={{activity.id}}">
       <img src="/static/pen.png" height="20" />
       Edit
