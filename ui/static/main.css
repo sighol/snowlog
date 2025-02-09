@@ -7,7 +7,9 @@
   --record-hover: #1b2830;
   --link-color: #7CB7DF;
   --border-color: #111;
-  --button-padding: 0.1em 0.3em;
+  --button-padding: 0.2em 0.8em;
+  --button-color: var(--week-header);
+  --border-radius: 5px;
   font-size: 20px;
 }
 
@@ -78,11 +80,12 @@ body {
 
 .season-summary a {
   padding: var(--button-padding);
-  border-radius: 5px;
+  border-radius: var(--border-radius);
+  background-color: var(--week-header);
 }
 
 .season-summary a:hover {
-  background-color: var(--week-header);
+  background-color: var(--record-hover);
 }
 
 a {
@@ -106,7 +109,7 @@ a {
 
 .activity .description  {
   background-color: var(--mid-color);
-  border-radius: 5px;
+  border-radius: var(--border-radius);
   margin: 10px;
   padding: 10px;
   border: 1px solid var(--border-color);
@@ -122,12 +125,14 @@ a {
 }
 
 .activity .edit-button a {
-  padding: 0.1em 0.3em;
-  border-radius: 5px;
+  padding: var(--button-padding);
+  border-radius: var(--border-radius);
+  background-color: var(--button-color);
 }
 
 .activity .edit-button a:hover {
   background-color: var(--week-header);
+  background-color: var(--record-hover);
 }
 
 
@@ -138,7 +143,7 @@ form textarea
  {
   padding: 0.5em 1em;
   background-color: #eee;
-  border-radius: 5px;
+  border-radius: var(--border-radius);
   border: 2px solid #111;
 }
 
@@ -149,7 +154,7 @@ button {
   color: #eee;
   font-weight: bold;
   border: 2px solid #111;
-  border-radius: 5px;
+  border-radius: var(--border-radius);
 }
 
 button:hover {
