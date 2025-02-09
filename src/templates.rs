@@ -52,11 +52,11 @@ fn orempty(value: Option<String>) -> Value {
     }
 }
 
-fn markdown(value: String) -> String {
+fn markdown(value: String) -> Value {
     let parsed = pulldown_cmark::Parser::new(&value);
     let mut output = String::new();
     pulldown_cmark::html::push_html(&mut output, parsed);
-    output
+    safe(output)
 }
 
 fn hourminutes(value: Option<String>) -> Result<Value, Error> {
