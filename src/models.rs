@@ -94,8 +94,7 @@ pub async fn get_activity(con: &SqlitePool, id: i64) -> anyhow::Result<Option<Ac
             sa.score
             from snowboard_activities as sa
             join snowboard_activity_types as sat on sat.id = sa.type
-            where sa.id >= ?
-            order by date asc",
+            where sa.id == ?",
         id,
     )
     .fetch_optional(con)
