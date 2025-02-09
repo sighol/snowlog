@@ -36,7 +36,7 @@ body {
 
 .main {
   margin: auto;
-  width: min(max(950px, 60%), 1400px);
+  width: min(100%, 1400px);
 }
 
 .header {
