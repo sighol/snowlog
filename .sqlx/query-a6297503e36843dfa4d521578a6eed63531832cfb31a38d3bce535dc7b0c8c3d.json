@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "\n            insert into snowboard_activities (\n                date,\n                location,\n                duration_hours,\n                type,\n                description,\n                score\n            ) VALUES (?, ?, ?, ?, ?, ?)\n        ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 6
+    },
+    "nullable": []
+  },
+  "hash": "a6297503e36843dfa4d521578a6eed63531832cfb31a38d3bce535dc7b0c8c3d"
+}

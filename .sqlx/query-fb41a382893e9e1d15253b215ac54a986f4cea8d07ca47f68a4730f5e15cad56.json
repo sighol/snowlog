@@ -1,6 +1,6 @@
 {
   "db_name": "SQLite",
-  "query": "select \n            sa.id,\n            sa.date,\n            sa.duration_hours,\n            sat.type as activity_type,\n            sa.description,\n            sa.score\n            from snowboard_activities as sa\n            join snowboard_activity_types as sat on sat.id = sa.type\n            where sa.id >= ?\n            order by date asc",
+  "query": "select \n            sa.id,\n            sa.date,\n            sa.location,\n            sa.duration_hours,\n            sat.type as activity_type,\n            sa.description,\n            sa.score\n            from snowboard_activities as sa\n            join snowboard_activity_types as sat on sat.id = sa.type\n            where sa.id >= ?\n            order by date asc",
   "describe": {
     "columns": [
       {
@@ -14,23 +14,28 @@
         "type_info": "Text"
       },
       {
-        "name": "duration_hours",
+        "name": "location",
         "ordinal": 2,
+        "type_info": "Text"
+      },
+      {
+        "name": "duration_hours",
+        "ordinal": 3,
         "type_info": "Float"
       },
       {
         "name": "activity_type",
-        "ordinal": 3,
-        "type_info": "Text"
-      },
-      {
-        "name": "description",
         "ordinal": 4,
         "type_info": "Text"
       },
       {
-        "name": "score",
+        "name": "description",
         "ordinal": 5,
+        "type_info": "Text"
+      },
+      {
+        "name": "score",
+        "ordinal": 6,
         "type_info": "Float"
       }
     ],
@@ -41,10 +46,11 @@
       false,
       false,
       true,
+      true,
       false,
       false,
       true
     ]
   },
-  "hash": "f82e930c116b6707f6d630cdaee20dc92cc1c736de642e04e19d3c8e8d110a67"
+  "hash": "fb41a382893e9e1d15253b215ac54a986f4cea8d07ca47f68a4730f5e15cad56"
 }
