@@ -21,6 +21,12 @@
       {% if activity.duration_hours %}
       <strong>Duration:&nbsp;</strong>{{activity.duration_hours|floatfmt}}<br />
       {% endif %}
+
+      {% if activity.location %}
+        <strong>Location:&nbsp;</strong>{{activity.location}}<br />
+      {% endif %}
+
+
       {% if activity.score %}
       <strong>Score:&nbsp;</strong>{{activity.score|floatfmt}}<br />
       {% endif %}
