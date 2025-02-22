@@ -1,6 +1,6 @@
 {
   "db_name": "SQLite",
-  "query": "select id, type as type_ from snowboard_activity_types",
+  "query": "select id, type as type_ from activity_types",
   "describe": {
     "columns": [
       {
@@ -22,5 +22,5 @@
       false
     ]
   },
-  "hash": "31c6d7290020e6952efb8569749106e589e3e8a2f685f81fdea5839b292655ed"
+  "hash": "5f067146f3931b638402b0c54af628a3af6a689a70df5bc316a451623918eb68"
 }

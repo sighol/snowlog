@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "\n            insert into activities (\n                date,\n                location,\n                duration_hours,\n                type,\n                description,\n                score\n            ) VALUES (?, ?, ?, ?, ?, ?)\n        ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 6
+    },
+    "nullable": []
+  },
+  "hash": "615f0332cabdd6dde2656fbf934f05ad34b4d93c4f779c8605fec5722e46ce8d"
+}

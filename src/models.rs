@@ -61,7 +61,7 @@ pub async fn get_activities_from(
 
     let response = sqlx::query_as!(
         ActivityRow,
-        "select 
+        "select
             sa.id,
             sa.date,
             coalesce(sa.location, '') as location,
@@ -69,8 +69,8 @@ pub async fn get_activities_from(
             sat.type as activity_type,
             sa.description,
             sa.score
-            from snowboard_activities as sa
-            join snowboard_activity_types as sat on sat.id = sa.type
+            from activities as sa
+            join activity_types as sat on sat.id = sa.type
             where date >= ?
             order by date desc",
         timestamp,
@@ -84,7 +84,7 @@ pub async fn get_activities_from(
 pub async fn get_activity(con: &SqlitePool, id: i64) -> anyhow::Result<Option<Activity>> {
     let response = sqlx::query_as!(
         ActivityRow,
-        "select 
+        "select
             sa.id,
             sa.date,
             coalesce(sa.location, '') as location,
@@ -92,8 +92,8 @@ pub async fn get_activity(con: &SqlitePool, id: i64) -> anyhow::Result<Option<Ac
             sat.type as activity_type,
             sa.description,
             sa.score
-            from snowboard_activities as sa
-            join snowboard_activity_types as sat on sat.id = sa.type
+            from activities as sa
+            join activity_types as sat on sat.id = sa.type
             where sa.id == ?",
         id,
     )
@@ -104,12 +104,9 @@ pub async fn get_activity(con: &SqlitePool, id: i64) -> anyhow::Result<Option<Ac
 }
 
 pub async fn get_all_types(con: &SqlitePool) -> anyhow::Result<Vec<ActivityType>> {
-    let results = sqlx::query_as!(
-        ActivityType,
-        "select id, type as type_ from snowboard_activity_types",
-    )
-    .fetch_all(con)
-    .await?;
+    let results = sqlx::query_as!(ActivityType, "select id, type as type_ from activity_types",)
+        .fetch_all(con)
+        .await?;
     Ok(results)
 }
 
@@ -123,7 +120,7 @@ pub async fn insert_activity(con: &SqlitePool, activity: Activity) -> anyhow::Re
 
     sqlx::query!(
         r"
-            insert into snowboard_activities (
+            insert into activities (
                 date,
                 location,
                 duration_hours,
@@ -156,7 +153,7 @@ pub async fn update_activity(con: &SqlitePool, activity: Activity) -> anyhow::Re
 
     sqlx::query!(
         r"
-            update snowboard_activities 
+            update activities
                 set date = ?,
                     location = ?,
                     duration_hours = ?,
@@ -180,7 +177,7 @@ pub async fn update_activity(con: &SqlitePool, activity: Activity) -> anyhow::Re
 }
 
 pub async fn delete_activity(con: &SqlitePool, id: i64) -> anyhow::Result<()> {
-    sqlx::query!("delete from snowboard_activities where id = ?", id)
+    sqlx::query!("delete from activities where id = ?", id)
         .execute(con)
         .await?;
 
@@ -204,7 +201,7 @@ pub async fn get_summary(
             select 
                 count(*) as days,
                 coalesce(sum(duration_hours), 0.0) as hours
-            from snowboard_activities
+            from activities
             where date >= ? and date < ?
         ",
         from,

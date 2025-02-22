@@ -1,6 +1,6 @@
 {
   "db_name": "SQLite",
-  "query": "\n            select \n                count(*) as days,\n                coalesce(sum(duration_hours), 0.0) as hours\n            from snowboard_activities\n            where date >= ? and date < ?\n        ",
+  "query": "\n            select \n                count(*) as days,\n                coalesce(sum(duration_hours), 0.0) as hours\n            from activities\n            where date >= ? and date < ?\n        ",
   "describe": {
     "columns": [
       {
@@ -22,5 +22,5 @@
       false
     ]
   },
-  "hash": "0110b83b645fb65bf6f42355a6ade0279a5a1015fd0b1cace328600c76ab7586"
+  "hash": "b8f6b9f6ef28126285ec5a2cd010db0196d0d9e98187cb65ea7dcbe50e989a13"
 }

@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "delete from activities where id = ?",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": []
+  },
+  "hash": "614491e9fa96f1fcb94c72c9203d5131b5397b7ab17188643fa1bb4786cb702a"
+}
