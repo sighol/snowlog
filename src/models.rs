@@ -24,7 +24,7 @@ pub struct Activity {
     pub location: String,
     pub duration_hours: Option<f64>,
     pub r#type: String,
-    pub type_color: String,
+    pub type_color: Option<String>,
     pub score: Option<f64>,
     pub description: String,
 }
@@ -39,7 +39,7 @@ impl From<ActivityRow> for Activity {
             date,
             location: value.location,
             duration_hours: value.duration_hours,
-            type_color: string_to_rgb(&value.r#type),
+            type_color: Some(string_to_rgb(&value.r#type)),
             r#type: value.r#type,
             score: value.score,
             description: value.description,
@@ -56,15 +56,17 @@ pub fn string_to_rgb(input: &str) -> String {
     let mut g = ((hash >> 8) & 0xFF) as u8;
     let mut b = ((hash >> 16) & 0xFF) as u8;
 
-    // Ensure the color is not too dark by boosting brightness
-    let min_brightness = 100; // Minimum value for each component
-    let max_component = r.max(g).max(b);
+    loop {
+        let brightness =
+            0.299 * (r as f64 / 255.0) + 0.587 * (g as f64 / 255.0) + 0.114 * (b as f64 / 255.0);
 
-    if max_component < min_brightness {
-        let factor = min_brightness as f32 / max_component as f32;
-        r = ((r as f32 * factor).min(255.0)) as u8;
-        g = ((g as f32 * factor).min(255.0)) as u8;
-        b = ((b as f32 * factor).min(255.0)) as u8;
+        if brightness < 0.2 {
+            r = ((r as f64) * 1.1) as u8;
+            g = ((g as f64) * 1.1) as u8;
+            b = ((b as f64) * 1.1) as u8;
+        } else {
+            break;
+        }
     }
     format!("#{:02X}{:02X}{:02X}", r, g, b)
 }
@@ -330,7 +332,7 @@ mod tests {
                 location: "Norefjell".to_owned(),
                 duration_hours: Some(3.14),
                 r#type: "Skis".into(),
-                type_color: "#123456".to_owned(),
+                type_color: None,
                 score: Some(0.8),
                 description: "This was fun".into(),
             },
@@ -366,7 +368,7 @@ mod tests {
                 location: "Tryvann".to_owned(),
                 duration_hours: Some(56.55),
                 r#type: "Snowboarding".to_owned(),
-                type_color: "#123456".to_owned(),
+                type_color: None,
                 score: Some(1.0),
                 description: "This was OK".into(),
             },
