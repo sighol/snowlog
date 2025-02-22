@@ -1,0 +1,20 @@
+{
+  "db_name": "SQLite",
+  "query": "select distinct type from activities order by 1",
+  "describe": {
+    "columns": [
+      {
+        "name": "type",
+        "ordinal": 0,
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Right": 0
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "c69f6d322bdbde8009be70b217b3c27a9d87a4f8ec2b77a80440bd5320b72e56"
+}

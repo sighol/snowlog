@@ -59,7 +59,7 @@ pub async fn get_add(
             date,
             duration_hours: None,
             location: "".to_owned(),
-            activity_type: activity_types[0].type_.clone(),
+            r#type: activity_types[0].clone(),
             score: None,
             description: "".to_owned(),
         }

@@ -1,6 +1,6 @@
 {
   "db_name": "SQLite",
-  "query": "select\n            sa.id,\n            sa.date,\n            coalesce(sa.location, '') as location,\n            sa.duration_hours,\n            sat.type as activity_type,\n            sa.description,\n            sa.score\n            from activities as sa\n            join activity_types as sat on sat.id = sa.type\n            where sa.id == ?",
+  "query": "select\n            sa.id,\n            sa.date,\n            coalesce(sa.location, '') as location,\n            sa.duration_hours,\n            sa.type,\n            sa.description,\n            sa.score\n            from activities as sa\n            where sa.id == ?",
   "describe": {
     "columns": [
       {
@@ -24,7 +24,7 @@
         "type_info": "Float"
       },
       {
-        "name": "activity_type",
+        "name": "type",
         "ordinal": 4,
         "type_info": "Text"
       },
@@ -52,5 +52,5 @@
       true
     ]
   },
-  "hash": "896dc339546422416e83a5d746dfcf59d1291fcbed2d1a488f5c1bacce417aab"
+  "hash": "f3f5ae7c6e06a9c593091f302c604cf1fab9e90bea2399b0fb4eaf7a2873958d"
 }

@@ -39,11 +39,12 @@
       />
 
       <label for="activity_type">Type</label>
-      <select name="activity_type">
+      <input list="activity_types" name="type" value="{{activity.type}}" />
+      <datalist id="activity_types">
         {% for type in activity_types %}
-        <option value="{{type.type_}}">{{type.type_}}</option>
+        <option value="{{type}}">
         {% endfor %}
-      </select>
+      </datalist>
 
       <label for="score">Score</label>
       <input
