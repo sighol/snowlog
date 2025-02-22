@@ -1,5 +1,5 @@
 use anyhow::{self};
-use chrono::NaiveDateTime;
+use chrono::{NaiveDate, NaiveDateTime, NaiveTime};
 use chrono_tz::Europe::Oslo;
 use serde::{Deserialize, Serialize};
 use sqlx::{FromRow, SqlitePool};
@@ -41,11 +41,6 @@ impl From<ActivityRow> for Activity {
             description: value.description,
         }
     }
-}
-
-#[derive(Debug, Serialize, FromRow)]
-pub struct ActivityType {
-    pub r#type: String,
 }
 
 pub async fn get_activities_from(
@@ -100,10 +95,59 @@ pub async fn get_activity(con: &SqlitePool, id: i64) -> anyhow::Result<Option<Ac
     Ok(response.map(|x| x.into()))
 }
 
-pub async fn get_all_types(con: &SqlitePool) -> anyhow::Result<Vec<String>> {
+#[derive(Debug, Serialize, FromRow)]
+pub struct ActivityType {
+    pub r#type: String,
+}
+
+pub async fn get_all_types(
+    con: &SqlitePool,
+    start: Option<NaiveDateTime>,
+    end: Option<NaiveDateTime>,
+) -> anyhow::Result<Vec<String>> {
+    let start = start.unwrap_or(NaiveDateTime::new(
+        NaiveDate::from_yo_opt(1970, 1).unwrap(),
+        NaiveTime::from_hms_opt(0, 0, 0).unwrap(),
+    ));
+    let end = end.unwrap_or(NaiveDateTime::new(
+        NaiveDate::from_yo_opt(2050, 1).unwrap(),
+        NaiveTime::from_hms_opt(0, 0, 0).unwrap(),
+    ));
     let results = sqlx::query_as!(
         ActivityType,
-        "select distinct type from activities order by 1",
+        "select distinct type
+        from activities
+        where date >= ? and date <= ?
+        order by 1",
+        start,
+        end,
+    )
+    .fetch_all(con)
+    .await?;
+    Ok(results.into_iter().map(|x| x.r#type).collect())
+}
+
+pub async fn get_all_locations(
+    con: &SqlitePool,
+    start: Option<NaiveDateTime>,
+    end: Option<NaiveDateTime>,
+) -> anyhow::Result<Vec<String>> {
+    let start = start.unwrap_or(NaiveDateTime::new(
+        NaiveDate::from_yo_opt(1970, 1).unwrap(),
+        NaiveTime::from_hms_opt(0, 0, 0).unwrap(),
+    ));
+    let end = end.unwrap_or(NaiveDateTime::new(
+        NaiveDate::from_yo_opt(2050, 1).unwrap(),
+        NaiveTime::from_hms_opt(0, 0, 0).unwrap(),
+    ));
+    let results = sqlx::query_as!(
+        ActivityType,
+        "select distinct coalesce(location, '') as type
+        from activities
+        where date >= ? and date <= ? and location != null
+        order by 1",
+        start,
+        end,
     )
     .fetch_all(con)
     .await?;

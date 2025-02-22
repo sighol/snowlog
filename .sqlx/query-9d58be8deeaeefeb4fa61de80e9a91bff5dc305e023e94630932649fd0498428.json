@@ -1,6 +1,6 @@
 {
   "db_name": "SQLite",
-  "query": "select distinct type from activities order by 1",
+  "query": "select distinct type\n        from activities\n        where date >= ? and date <= ?\n        order by 1",
   "describe": {
     "columns": [
       {
@@ -10,11 +10,11 @@
       }
     ],
     "parameters": {
-      "Right": 0
+      "Right": 2
     },
     "nullable": [
       false
     ]
   },
-  "hash": "c69f6d322bdbde8009be70b217b3c27a9d87a4f8ec2b77a80440bd5320b72e56"
+  "hash": "9d58be8deeaeefeb4fa61de80e9a91bff5dc305e023e94630932649fd0498428"
 }

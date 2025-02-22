@@ -28,8 +28,14 @@
       <input
         type="text"
         name="location"
+        list="locations"
         value="{{activity.location}}"
       />
+      <datalist id="locations">
+        {% for location in locations %}
+        <option value="{{location}}">
+        {% endfor %}
+      </datalist>
 
       <label for="date">Duration in hours</label>
       <input

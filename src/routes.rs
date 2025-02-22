@@ -6,8 +6,8 @@ use chrono_tz::Europe::Oslo;
 use minijinja::context;
 
 use crate::models::{
-    delete_activity, get_activities_from, get_activity, get_all_types, get_summary,
-    insert_activity, update_activity, Activity,
+    delete_activity, get_activities_from, get_activity, get_all_locations, get_all_types,
+    get_summary, insert_activity, update_activity, Activity,
 };
 use crate::AppState;
 
@@ -44,7 +44,8 @@ pub async fn get_add(
     Query(q): Query<AddFormStruct>,
     State(state): State<AppState>,
 ) -> Html<String> {
-    let activity_types = get_all_types(&state.pool).await.unwrap();
+    let activity_types = get_all_types(&state.pool, None, None).await.unwrap();
+    let locations = get_all_locations(&state.pool, None, None).await.unwrap();
 
     let activity = if let Some(id) = q.id {
         get_activity(&state.pool, id).await.unwrap().unwrap()
@@ -67,7 +68,11 @@ pub async fn get_add(
 
     state.render(
         "edit.html",
-        context!(activity => activity, activity_types => activity_types),
+        context!(
+            activity => activity,
+            activity_types => activity_types,
+            locations => locations,
+        ),
     )
 }
 

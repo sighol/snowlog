@@ -1,0 +1,20 @@
+{
+  "db_name": "SQLite",
+  "query": "select distinct coalesce(location, '') as type\n        from activities\n        where date >= ? and date <= ? and location != null\n        order by 1",
+  "describe": {
+    "columns": [
+      {
+        "name": "type",
+        "ordinal": 0,
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "0666a61aae876b9d6892b47eff6dc45534f47c746f1caf75083328a7fda5eafc"
+}
