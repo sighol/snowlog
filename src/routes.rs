@@ -61,6 +61,7 @@ pub async fn get_add(
             duration_hours: None,
             location: "".to_owned(),
             r#type: activity_types[0].clone(),
+            type_color: "white".into(),
             score: None,
             description: "".to_owned(),
         }

@@ -3,6 +3,8 @@ use chrono::{NaiveDate, NaiveDateTime, NaiveTime};
 use chrono_tz::Europe::Oslo;
 use serde::{Deserialize, Serialize};
 use sqlx::{FromRow, SqlitePool};
+use std::collections::hash_map::DefaultHasher;
+use std::hash::{Hash, Hasher};
 
 #[derive(Debug, Serialize, FromRow)]
 pub struct ActivityRow {
@@ -22,6 +24,7 @@ pub struct Activity {
     pub location: String,
     pub duration_hours: Option<f64>,
     pub r#type: String,
+    pub type_color: String,
     pub score: Option<f64>,
     pub description: String,
 }
@@ -36,11 +39,34 @@ impl From<ActivityRow> for Activity {
             date,
             location: value.location,
             duration_hours: value.duration_hours,
+            type_color: string_to_rgb(&value.r#type),
             r#type: value.r#type,
             score: value.score,
             description: value.description,
         }
     }
+}
+
+pub fn string_to_rgb(input: &str) -> String {
+    let mut hasher = DefaultHasher::new();
+    input.hash(&mut hasher);
+    let hash = hasher.finish();
+
+    let mut r = (hash & 0xFF) as u8;
+    let mut g = ((hash >> 8) & 0xFF) as u8;
+    let mut b = ((hash >> 16) & 0xFF) as u8;
+
+    // Ensure the color is not too dark by boosting brightness
+    let min_brightness = 100; // Minimum value for each component
+    let max_component = r.max(g).max(b);
+
+    if max_component < min_brightness {
+        let factor = min_brightness as f32 / max_component as f32;
+        r = ((r as f32 * factor).min(255.0)) as u8;
+        g = ((g as f32 * factor).min(255.0)) as u8;
+        b = ((b as f32 * factor).min(255.0)) as u8;
+    }
+    format!("#{:02X}{:02X}{:02X}", r, g, b)
 }
 
 pub async fn get_activities_from(
@@ -286,6 +312,7 @@ mod tests {
                 location: "Norefjell".to_owned(),
                 duration_hours: Some(3.14),
                 r#type: "Skis".into(),
+                type_color: "#123456".to_owned(),
                 score: Some(0.8),
                 description: "This was fun".into(),
             },
@@ -321,6 +348,7 @@ mod tests {
                 location: "Tryvann".to_owned(),
                 duration_hours: Some(56.55),
                 r#type: "Snowboarding".to_owned(),
+                type_color: "#123456".to_owned(),
                 score: Some(1.0),
                 description: "This was OK".into(),
             },
