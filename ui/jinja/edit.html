@@ -60,7 +60,7 @@
 {%if activity %}{{activity.description|orempty}}{%endif %}</textarea>
       <button type="submit">Save</button>
     </form>
-    {%if activity%}
+    {%if activity.id%}
     <div class="delete-form">
       <button class="delete-button" onclick="confirmDelete()">delete</button>
     </div>
