@@ -241,8 +241,16 @@ pub async fn delete_activity(con: &SqlitePool, id: i64) -> anyhow::Result<()> {
 }
 
 #[derive(Debug, Serialize, FromRow)]
+pub struct SummaryRow {
+    pub r#type: String,
+    pub days: i64,
+    pub hours: f64,
+}
+
+#[derive(Debug, Serialize)]
 pub struct Summary {
     pub r#type: String,
+    pub type_color: String,
     pub days: i64,
     pub hours: f64,
 }
@@ -253,7 +261,7 @@ pub async fn get_summary(
     to: NaiveDateTime,
 ) -> anyhow::Result<Vec<Summary>> {
     let response = sqlx::query_as!(
-        Summary,
+        SummaryRow,
         r"
             select
                 type,
@@ -270,7 +278,17 @@ pub async fn get_summary(
     .fetch_all(con)
     .await?;
 
-    Ok(response)
+    let summaries = response
+        .into_iter()
+        .map(|x| Summary {
+            type_color: string_to_rgb(&x.r#type),
+            r#type: x.r#type,
+            days: x.days,
+            hours: x.hours,
+        })
+        .collect();
+
+    Ok(summaries)
 }
 
 #[cfg(test)]

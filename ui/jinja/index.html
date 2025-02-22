@@ -15,7 +15,7 @@
   <table class="season-summary">
     {% for summary in summaries %}
     <tr>
-      <th>{{summary.type}}</th>
+      <th style="color: {{summary.type_color}}">{{summary.type}}</th>
       <td>{{summary.days}} days</td>
       <td>{{summary.hours|floatfmt}} hours</td>
     </tr>
