@@ -33,3 +33,11 @@ repos:
         language: system
         pass_filenames: false
         always_run: true
+      - id: sqlx prepare
+        name: sqlx
+        entry: cargo sqlx prepare --database-url "sqlite://db.sqlite"
+        args: []
+        types: [rust]
+        language: system
+        pass_filenames: false
+        always_run: true

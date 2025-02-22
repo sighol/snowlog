@@ -6,4 +6,4 @@ migrate:
 	sqlx migrate run --database-url "sqlite://db.sqlite"
 
 prepare:
-	DATABASE_URL=sqlite://db.sqlite cargo sqlx prepare
+	cargo sqlx prepare --database-url "sqlite://db.sqlite"
