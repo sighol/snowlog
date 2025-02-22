@@ -19,6 +19,7 @@
       <input
         type="text"
         name="date"
+        id="date"
         value="{{activity.date}}"
         required
       />
@@ -91,5 +92,13 @@
       document.deleteactivityForm.submit();
     }
   }
+
+  flatpickr("#date", {
+      enableTime: true,
+      dateFormat: "Y-m-dTH:i:S",
+      altInput: true,
+      altFormat: "Y-m-d H:i",
+      time_24hr: true,
+  });
 </script>
 {% endif %} {% endblock%}

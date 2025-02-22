@@ -1,6 +1,6 @@
 {%- macro home_header_link() -%}
 <a href="/" class="home-link">
-  <img src="/static/home.png" height="32" width="32" />
+  <img src="/static/img/home.png" height="32" width="32" />
 </a>
 {%- endmacro -%}
 
@@ -16,7 +16,10 @@
       href="/static/favicon/snowflake.ico?ver={{(buildNumber)}}"
     />
 
-    <link rel="stylesheet" href="/static/main.css?ver={{(buildNumber)}}" />
+    <link rel="stylesheet" href="/static/css/flatpickr.min.css" />
+    <script src="/static/js/flatpickr.js"></script>
+
+    <link rel="stylesheet" href="/static/css/main.css?ver={{(buildNumber)}}" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content="Time tracking" />
 
@@ -24,5 +27,6 @@
   </head>
   <body>
     <div class="main">{% block main %}{% endblock %}</div>
+    
   </body>
 </html>
