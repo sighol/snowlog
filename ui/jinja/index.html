@@ -12,18 +12,22 @@
     </h1>
   </div>
 
-  <div class="season-summary">
-    <div>
-      <Strong>Total days:</Strong> {{summary.days}}
-    </div>
-    <div>
-      <Strong>Total hours:</Strong> {{summary.hours|floatfmt}}
-    </div>
+  <table class="season-summary">
+    {% for summary in summaries %}
+    <tr>
+      <th>{{summary.type}}</th>
+      <td>{{summary.days}} days</td>
+      <td>{{summary.hours|floatfmt}} hours</td>
+    </tr>
+    {% endfor %}
+  </table>
+
+  <p class="add-new">
     <a href="/edit" class="add-new">
       <img src="/static/pen.png" height="20" />
       Add new
     </a>
-  </div>
+  </p>
 
   {% for activity in activities %}
   <div class="activity">

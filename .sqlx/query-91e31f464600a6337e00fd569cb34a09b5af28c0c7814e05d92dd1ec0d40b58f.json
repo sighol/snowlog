@@ -1,0 +1,32 @@
+{
+  "db_name": "SQLite",
+  "query": "\n            select\n                type,\n                count(*) as days,\n                coalesce(sum(duration_hours), 0.0) as hours\n            from activities\n            where date >= ? and date < ?\n            group by type\n            order by 2\n        ",
+  "describe": {
+    "columns": [
+      {
+        "name": "type",
+        "ordinal": 0,
+        "type_info": "Text"
+      },
+      {
+        "name": "days",
+        "ordinal": 1,
+        "type_info": "Integer"
+      },
+      {
+        "name": "hours",
+        "ordinal": 2,
+        "type_info": "Float"
+      }
+    ],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": [
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "91e31f464600a6337e00fd569cb34a09b5af28c0c7814e05d92dd1ec0d40b58f"
+}

@@ -23,6 +23,11 @@ body {
   color: #ddd;
 }
 
+a {
+  color: var(--color);
+  text-decoration: none;
+}
+
 @media only screen and (max-width: 1000px) {
   .main {
     font-size: 12px;
@@ -71,30 +76,33 @@ body {
   align-self: end;
 }
 
+/* Summary table */
 .season-summary {
   margin-top: 2em;
+  margin-left: auto;
+  margin-right: auto;
   padding: 0 1em;
-  display: flex;
-  justify-content: space-between;
 }
 
-.season-summary > * {
-  align-content: center;
+.season-summary th,
+.season-summary td {
+  width: 150px;
+  text-align: left;
 }
 
-.season-summary a {
+
+p.add-new {
+  text-align: right;
+  padding: 0 1em;
+}
+a.add-new {
   padding: var(--button-padding);
   border-radius: var(--border-radius);
   background-color: var(--week-header);
 }
 
-.season-summary a:hover {
+a.add-new:hover {
   background-color: var(--record-hover);
-}
-
-a {
-  color: var(--color);
-  text-decoration: none;
 }
 
 .activity {

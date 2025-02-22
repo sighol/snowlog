@@ -27,11 +27,11 @@ pub async fn get_index(State(state): State<AppState>) -> Html<String> {
     let ended = started.checked_add_months(Months::new(12)).unwrap();
     tracing::info!("Started: {:?}, ended: {:?}", started, ended);
     let activities = get_activities_from(&state.pool, started).await.unwrap();
-    let summary = get_summary(&state.pool, started, ended).await.unwrap();
+    let summaries = get_summary(&state.pool, started, ended).await.unwrap();
 
     state.render(
         "index.html",
-        context!(activities => activities, summary => summary,),
+        context!(activities => activities, summaries => summaries,),
     )
 }
 

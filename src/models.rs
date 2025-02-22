@@ -172,6 +172,7 @@ pub async fn delete_activity(con: &SqlitePool, id: i64) -> anyhow::Result<()> {
 
 #[derive(Debug, Serialize, FromRow)]
 pub struct Summary {
+    pub r#type: String,
     pub days: i64,
     pub hours: f64,
 }
@@ -180,20 +181,23 @@ pub async fn get_summary(
     con: &SqlitePool,
     from: NaiveDateTime,
     to: NaiveDateTime,
-) -> anyhow::Result<Summary> {
+) -> anyhow::Result<Vec<Summary>> {
     let response = sqlx::query_as!(
         Summary,
         r"
             select
+                type,
                 count(*) as days,
                 coalesce(sum(duration_hours), 0.0) as hours
             from activities
             where date >= ? and date < ?
+            group by type
+            order by 2
         ",
         from,
         to,
     )
-    .fetch_one(con)
+    .fetch_all(con)
     .await?;
 
     Ok(response)
@@ -306,6 +310,6 @@ mod tests {
         let start = NaiveDateTime::from_str("2025-01-01T00:00:00").unwrap();
         let stopped = NaiveDateTime::from_str("2026-01-01T00:00:00").unwrap();
         let summary = get_summary(&pool, start, stopped).await.unwrap();
-        assert_eq!(1, summary.days);
+        assert_eq!(1, summary[0].days);
     }
 }
